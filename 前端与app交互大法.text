@@ -1,0 +1,113 @@
+/*---------------------------------js 调用 app---------------------------------*/
+/**
+ * @description 调用 APP方法
+ * @param {String} -method 协定方法
+ * @param {Object} -val data
+ * 分享
+ * lztShareAction:  分享
+ *  {title:  标题,desc: 描述,icon: '',url:  分享地址 window.location.href.split('?')[0]}
+ * 
+ * 分享
+ * shareUrl:  分享
+ *  {title:  标题,desc: 描述,icon: '',url:  分享地址 window.location.href.split('?')[0]}
+ *
+ * 关闭webview
+ * closeWebView：关闭webview
+ *
+ * 原生导航右按钮
+ * lztCustomTitle：原生导航右按钮
+ * {title:'兑换记录',url:'跳转的url'}
+ * 
+ * 签到视频广告
+ * lztAdVideo：签到视频广告
+ * 
+ * js调用相机扫描二维码后再回传给js
+ * qrCamera：js调用相机扫描二维码后再回传给js
+ * 
+ * 保存二维码
+ * lztSaveQRImg：保存二维码
+ * 
+ * 保存图片到相册
+ * lztSaveImg：保存图片 
+ * { src:'图片地址',type:1 } type: 1 base64  0 链接地址  
+ * 
+ * 截屏
+ * lztScreenCapture：截屏
+ * 
+ * 关闭当前webview
+ * webBack：关闭当前webview
+ * 
+ * 返回
+ * routeBack：返回
+ *
+ * 云商通协议签订成功
+ * lztYSTSuccess：云商通协议签订成功
+ * 
+ * 云商通协议签订失败
+ * lztYSFaild：云商通协议签订失败
+ * 
+ * 刷新
+ * lztReloadWebView：刷新
+ * 
+ * 根据分类id 跳转到分类
+ * lztReloadWebView：根据分类id 跳转到分类
+ * 
+ * 改变状态栏字体颜色
+ * changeTopColor：改变状态栏字体颜色
+ * {color: 0} 1为黑色 0是其他
+ * 
+ * 支付
+ * lztPayAction：支付
+ * {orderId:'订单号',goodsDes:'商品描述',payPrice:'金额'}
+ *
+ * 跳转商品详情
+ * lztCommodityAction: 跳转商品详情
+ * {_id:'商品id',type: 1}
+ *
+ * 跳往原生指定页面
+ * webJumpPhone：跳往原生指定页面
+ * { pageName: 'lzt://myBankCardTarget' }
+ * lzt://bountyEarningTarget: 原生赏金收益  
+   lzt://rebateEarningTarget：原生返利收益  
+   lzt://littleMakeMoneyTarget：原生小赚一笔  
+   lzt://systemServerIMTarget：客服 
+   lztLoginAction: 登录
+   lzt://SignDetailActionTarget: 签到
+   lzt://rotaryLuckyTarget: 转盘抽奖
+   lzt://mapAddressTarget: 定位 'lzt://mapAddressTarget?name=' + this.shareName + '&latitude=' + this.lat + '&longitude=' + this.lon
+   lzt://myBankCardTarget: 银行卡绑定
+   lzt://zabDetaileTarget: 纹豆详情
+   lzt://shopGoodsDetailTarget: 兑换专区 'lzt://shopGoodsDetailTarget?_id=' + id
+   lzt://applySalesTarget: 售后订单重新申请 'lzt://applySalesTarget?orderId=' + this.orderData.mallsOrderId + '&goodsId=' + this.orderData.goodsid + '&goodsType=' + this.orderData.goodstype + '&goodsNum=' + this.orderData.goodsNumber
+   lzt://EnjoyLifeTarget: 指纹消费
+   lzt://shopAllCategoryTarget:
+ */
+nativeMethods: (method, val) => {
+  const u = navigator.userAgent
+  const isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1
+
+  if (isAndroid) {
+    try {
+      if (val) {
+        console.log(val)
+        window.lztLoginAction[method](JSON.stringify(val))
+      } else {
+        window.lztLoginAction[method]()
+      }
+    } catch (e) {
+      // console.log(e)
+    }
+  } else {
+    try {
+      var data = val ? JSON.stringify(val) : 'xxxxxxx'
+      window.webkit.messageHandlers[method].postMessage(data)
+    } catch (error) {
+      // alert(error)
+    }
+  }
+}
+/*---------------------------------app 调用 h5---------------------------------*/
+/**
+ * lztReloadData: 登录 返回token
+ * onResume: 每次WebView显示的时候  都会调用 无返回值
+ */
